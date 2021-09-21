@@ -73,10 +73,10 @@ def put_amenity(amenity_id):
         amenity = amenities[key]
     except keyError:
         abort(404)
-    if not request.is_json:
-        abort(400, 'Not a JSON')
-    else:
+    if request.is_json:
         request_body = request.get_json()
+    else:
+        abort(400, 'Not a JSON')
     for key, value in request_body.items():
         if key != 'id' and key != 'created_at' and key != 'updated_at':
             setattr(amenity, key, value)
