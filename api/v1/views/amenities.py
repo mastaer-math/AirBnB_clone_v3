@@ -68,18 +68,17 @@ def post_amenity():
 def put_amenity(amenity_id):
     """updates a Amenity"""
     amenities = storage.all(Amenity)
+    key = 'Amenity.' + amenity_id
     try:
-        key = 'Amenity.' + amenity_id
         amenity = amenities[key]
-        if not request.is_json:
-            abort(400, 'Not a JSON')
-        else:
-            request_body = request.get_json()
-        for key, value in request_body.items():
-            if key != 'id' and key != 'created_at' and key != 'updated_at':
-                setattr(amenity, key, value)
-        storage.save()
-        return jsonify(amenity.to_dict()), 200
     except keyError:
         abort(404)
-    abort(501)
+    if not request.is_json:
+        abort(400, 'Not a JSON')
+    else:
+        request_body = request.get_json()
+    for key, value in request_body.items():
+        if key != 'id' and key != 'created_at' and key != 'updated_at':
+            setattr(amenity, key, value)
+    storage.save()
+    return jsonify(amenity.to_dict()), 200
